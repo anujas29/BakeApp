@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BakeApp</string>
+    <string name="step_text">Step Description</string>
+    <string name="next_step">Next Step</string>
+</resources>
