@@ -29,9 +29,6 @@ public class StepDetail extends AppCompatActivity {
             step = getIntent().getParcelableArrayListExtra("step");
 
             if(step!=null) {
-
-                System.out.println("------------------------ inside stepDetail not null-----------------"+step.get(1).getVideoURL());
-                System.out.println("------------------------ inside stepDetail not null-----------------"+step.get(2).getVideoURL());
                 StepDetailViewFragment stepDetailFragment = new StepDetailViewFragment();
                 stepDetailFragment.setPosition(getIntent().getIntExtra("position",0));
                 stepDetailFragment.setStep(step);

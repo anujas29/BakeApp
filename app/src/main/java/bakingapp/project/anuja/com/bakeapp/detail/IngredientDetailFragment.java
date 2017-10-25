@@ -37,7 +37,6 @@ public class IngredientDetailFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        System.out.println("---------- inside onCreateView --------------------");
         if(savedInstanceState!= null){
             ingredient = savedInstanceState.getParcelableArrayList(INGREDIENT);
         }
@@ -65,13 +64,11 @@ public class IngredientDetailFragment extends Fragment{
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        System.out.println("---------- inside onSaveInstanceState --------------------");
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(INGREDIENT, (ArrayList<? extends Parcelable>) ingredient);
     }
 
     public void setIngredientList(List<Ingredient> ingredient){
-        System.out.println("---------- inside setIngredientList --------------------");
         this.ingredient = ingredient;
     }
 }

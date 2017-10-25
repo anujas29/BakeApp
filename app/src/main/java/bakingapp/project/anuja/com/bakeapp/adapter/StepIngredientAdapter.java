@@ -40,15 +40,8 @@ public class StepIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-//        if(viewType == VIEW_ING_LABLE)
-//        {
-//            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.label_ingredient, parent, false);
-//            return new ViewHolderLableIngredient(itemView);
-//        }
-
          if (viewType == VIEW_TYPE_INGREDIENT) {
 
-            System.out.println("------------------- VIEW_TYPE_INGREDIENT ----------------------");
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ingredient_list, parent, false);
             return new ViewHolderIngredient(itemView);
        }
@@ -59,7 +52,6 @@ public class StepIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
         else {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.step_list, parent, false);
-            System.out.println("------------------- T3 ----------------------");
             return new ViewHolderSteps(itemView);
 
         }
@@ -67,20 +59,14 @@ public class StepIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-//        if (position == 0) {
-//            System.out.println("------------------------- position VIEW_ING_LABLE -------------");
-//            return VIEW_ING_LABLE;
-//        }
+
         if (position == 0) {
-            System.out.println("------------------------- position VIEW_TYPE_INGREDIENT -------------");
             return VIEW_TYPE_INGREDIENT;
         }
         if (position == 1) {
-            System.out.println("------------------------- position VIEW_STEP_LABLE -------------");
             return VIEW_STEP_LABLE;
         }
          else {
-            System.out.println("------------------------- position VIEW_TYPE_STEP -------------");
             return VIEW_TYPE_STEP;
         }
     }
@@ -104,9 +90,6 @@ public class StepIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public int getItemCount() {
 
-        System.out.println("------------------- T1 ingredient ----------------------"+ingredient.size());
-        System.out.println("------------------- T1 step ----------------------"+step.size());
-        //return  ingredient.size();
         return 2 + step.size();
     }
 
@@ -129,7 +112,6 @@ public class StepIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
 
         public void bindViews() {
-            System.out.println("------------------- T2 ----------------------");
             ingredient_size.setText("Total Ingredients = "+ingredient.size());
         }
 
@@ -154,8 +136,7 @@ public class StepIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
 
         public void bindViews(int position) {
-            //StepDesc.setText(stepList.get(position).getShortDescription());
-            System.out.println("------------------- ViewHolderSteps ----------------------"+step.size());
+
             StepDesc.setText(step.get(position).getShortDescription());
         }
 

@@ -27,8 +27,6 @@ public class IngredientDetail extends AppCompatActivity {
         if (savedInstanceState == null) {
 
             ingredient = getIntent().getParcelableArrayListExtra("ingredient");
-
-            System.out.println("---------- inside IngredientDetail --------------------");
             if (ingredient != null) {
 
                 IngredientDetailFragment IngredientDetail = new IngredientDetailFragment();

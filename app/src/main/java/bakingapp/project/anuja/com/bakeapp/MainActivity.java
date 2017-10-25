@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity  {
     public static List<Recipe> recipeList = new ArrayList<>();
     private GridLayoutManager mLayoutManager;
     private String List_State = "list_state";
-   private Parcelable State;
+    private Parcelable State;
     private RecipeAdapter mRecipeAdapter;
     public boolean Tablet;
 
@@ -78,14 +78,11 @@ public class MainActivity extends AppCompatActivity  {
             public void onLongClick(View view, int position) {}
         }));
 
-
         getRecipe();
-
 
     }
     private void updateData(List<Recipe> recipe) {
 
-        System.out.println("---------- inside updateData() --------------------");
         recipeList = recipe;
         mRecipeAdapter = new RecipeAdapter(recipeList, MainActivity.this);
         mRecyclerView.setAdapter(mRecipeAdapter);
@@ -95,16 +92,14 @@ public class MainActivity extends AppCompatActivity  {
 
     private void getRecipe()
     {
-        System.out.println("---------- inside getRecipe() --------------------");
+
 
         BakingInterface apiService = BakingClient.getClient().create(BakingInterface.class);
         Call<List<Recipe>> call = apiService.getRecipes();
         call.enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                // System.out.println("---------- inside onResponse() --------------------"+response);
                 List<Recipe> RecipeData = response.body();
-                System.out.println("---------- inside onResponse() --------------------"+RecipeData.size());
                 updateData(RecipeData);
 
                 mLayoutManager.onRestoreInstanceState(State);
@@ -113,7 +108,8 @@ public class MainActivity extends AppCompatActivity  {
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                System.out.println("---------- inside onFailure() --------------------"+t);
+                //Toast.makeText(getContext(),"No Intenet Access ",Toast.LENGTH_SHORT).show();
+
             }
         });
     }

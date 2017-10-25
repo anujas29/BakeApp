@@ -55,7 +55,6 @@ public class RecipeActivity extends AppCompatActivity {
         setContentView(R.layout.recipe_list_content);
         ButterKnife.bind(this);
 
-        System.out.println("---------- inside onCreate() --------------------");
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
             recipeList = bundle.getParcelable("object");
@@ -75,8 +74,6 @@ public class RecipeActivity extends AppCompatActivity {
 
         mLayoutManager.onRestoreInstanceState(ListState);
 
-        System.out.println("---------- End onCreate() --------------------");
-
         if (findViewById(R.id.detail_item_container) != null) {
             TwoPane = true;
         }
@@ -88,7 +85,6 @@ public class RecipeActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
 
                 if(position == 0){
-//                    System.out.println("---------- inside if position --------------------"+position);
 
                     bundle.putParcelableArrayList("ingredient", (ArrayList<? extends Parcelable>) IngredientsList);
 

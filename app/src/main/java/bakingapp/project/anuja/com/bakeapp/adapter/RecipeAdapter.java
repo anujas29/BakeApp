@@ -40,12 +40,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        System.out.println("-------------------inside onBindViewHolder -----------"+position);
         holder.recipeName.setText(mRecipe.get(position).getName());
-
-
-
-
     }
 
     public void add(List<Recipe> movie) {
@@ -72,54 +67,3 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         }
     }
 }
-
-
-//public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>{
-//
-//    private  List<Recipe> recipe;
-//    private Context context;
-//    //private final Callbacks mCallbacks;
-//
-////    public interface Callbacks {
-////        void open(Recipe recipe, int position);
-////    }
-//
-//    public RecipeAdapter(List<Recipe> recipeList, Context context) {
-//        System.out.println("------------ RecipeAdapter -----------------"+recipeList.size());
-//        this.recipe = recipeList;
-//        this.context = context;
-//    }
-//
-//    @Override
-//    public RecipeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_list_content, parent, false);
-//        return new RecipeViewHolder(itemView);
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        System.out.println("-------------------inside getItemCount -----------"+recipe.size());
-//        return recipe.size();
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(RecipeViewHolder holder, int position) {
-//        System.out.println("-------------------inside onBindViewHolder -----------"+recipe.get(position).getName());
-//        holder.recipeName.setText(recipe.get(position).getName());
-//
-//    }
-//
-//
-//
-//    public class RecipeViewHolder extends RecyclerView.ViewHolder {
-//        @BindView(R.id.recipe_name)
-//        TextView recipeName;
-//
-//        public RecipeViewHolder(View itemView) {
-//            super(itemView);
-//            ButterKnife.bind(this, itemView);
-//        }
-//    }
-//
-//}
-//

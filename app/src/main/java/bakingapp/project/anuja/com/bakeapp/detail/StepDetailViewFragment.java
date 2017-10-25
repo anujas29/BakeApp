@@ -72,40 +72,27 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
+    String title;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
 
-        System.out.println("---------- inside onCreateView --------------------");
         if(savedInstanceState!= null){
             step_List = savedInstanceState.getParcelableArrayList(STEP_LIST);
             position = savedInstanceState.getInt(LIST_POSITION);
-
-            System.out.println("----------  step_List --------------------"+step_List);
-            System.out.println("----------  position --------------------"+position);
         }
         View rootView = inflater.inflate(R.layout.activity_step, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+        title = step_List.get(position).getShortDescription();
+        getActivity().setTitle(title);
 
         if (step_List != null) {
-
-//            mSimpleExoPlayerView.setDefaultArtwork(BitmapFactory.decodeResource
-//                    (getResources(), R.drawable.mybakestudio));
-            System.out.println("------------------------------ inside step_List not null-----------------");
 
             initializeMediaSession();
             initializePlayer(Uri.parse(step_List.get(position).getVideoURL()));
 
             description.setText(step_List.get(position).getDescription());
-
-            System.out.println("------------------------------ getDescription -----------------"+step_List.get(position).getDescription());
-            System.out.println("------------------------------ getVideoURL -----------------"+step_List.get(position).getVideoURL());
-
-            System.out.println("----------  step_List --------------------"+step_List);
-            System.out.println("----------  position --------------------"+position);
-//            if (step_List.get(position).getThumbnailURL() == "")
-//                Picasso.with(getContext()).load(step_List.get(position).getThumbnailURL()).into(thumbnail);
 
         } else {
             Toast.makeText(getContext(), "No Steps Present", Toast.LENGTH_SHORT).show();
@@ -117,7 +104,6 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        System.out.println("------------------------------ inside onSaveInstanceState-----------------");
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(STEP_LIST, (ArrayList<? extends Parcelable>) step_List);
         outState.putInt(LIST_POSITION, position);
@@ -190,6 +176,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
         releasePlayer();
         description.setText(step_List.get(position).getDescription());
+        getActivity().setTitle(step_List.get(position).getShortDescription());
         initializePlayer(Uri.parse(step_List.get(position).getVideoURL()));
 
     }
@@ -204,6 +191,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
         releasePlayer();
         description.setText(step_List.get(position).getDescription());
+        getActivity().setTitle(step_List.get(position).getShortDescription());
         initializePlayer(Uri.parse(step_List.get(position).getVideoURL()));
     }
 
@@ -227,7 +215,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle("step");
+        //getActivity().setTitle("step");
     }
 
     @Override
