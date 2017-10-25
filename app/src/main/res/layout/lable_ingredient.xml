@@ -3,6 +3,6 @@
     android:id="@+id/lable_id"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Ingredient"
+    android:text="@string/ingredient"
     android:padding="13dp"
     />

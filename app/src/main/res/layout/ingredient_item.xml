@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            tool:text="ingredient_name"
+            tool:text="@string/ing_name"
             android:textSize="16sp"
             android:textStyle="normal|bold"
             android:textAlignment="textStart" />
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:layout_below="@+id/inge_name"
-            tool:text="ingredient_quantity"
+            tool:text="@string/ing_quantity"
             android:textStyle="normal|italic" />
 
         <TextView
@@ -39,7 +39,7 @@
             android:padding="5dp"
             android:layout_below="@+id/inge_name"
             android:layout_toRightOf="@+id/inge_quantity"
-            tool:text="ingredient_measure"
+            tool:text="@string/ing_measure"
             android:textStyle="normal|italic" />
 
     </RelativeLayout>

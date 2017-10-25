@@ -57,14 +57,14 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="Previous"
+            android:text="@string/btn_prev"
             android:elevation="16dp"/>
         <Button
             android:id="@+id/button_Next"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="Next"
+            android:text="@string/btn_next"
             android:elevation="16dp"/>
     </LinearLayout>
     </LinearLayout>

@@ -19,7 +19,7 @@
         style="?android:attr/textAppearanceSmall"
         android:layout_gravity="center"
         android:padding="8dp"
-        tool:text="Ingredient"
+        tool:text="@string/ingredient"
         android:textAlignment="viewStart" />
 
 </android.support.v7.widget.CardView>
