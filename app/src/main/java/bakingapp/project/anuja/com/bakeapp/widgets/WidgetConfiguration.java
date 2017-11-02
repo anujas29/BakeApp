@@ -146,8 +146,7 @@ public class WidgetConfiguration extends Activity {
 
                     Gson gson = new Gson();
                     String json = gson.toJson(mRecipeIngredient);
-                    prefsEditor.putString("Id:" + WidgetId, json);
-
+                    prefsEditor.putString("Id: " + WidgetId, json);
                     prefsEditorForTitle.putString("RecipeTitle" + WidgetId, recipename);
 
                     prefsEditorForTitle.apply();

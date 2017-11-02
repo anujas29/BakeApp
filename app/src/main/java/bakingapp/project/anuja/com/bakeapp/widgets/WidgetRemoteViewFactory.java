@@ -45,15 +45,14 @@ public class WidgetRemoteViewFactory  implements RemoteViewsService.RemoteViewsF
 
 
         if(appId != 0){
-            // Gson
             Gson gson = new Gson();
             String json = preferences.getString("Id: "+appId, "");
             Type ingredient = new TypeToken<List<Ingredient>>() {} .getType();
             List<Ingredient> recipe_Ingredient = gson.fromJson(json, ingredient);
 
             if(recipe_Ingredient == null){
+               return;
 
-                return;
             }
             mIngredientList = recipe_Ingredient;
 
