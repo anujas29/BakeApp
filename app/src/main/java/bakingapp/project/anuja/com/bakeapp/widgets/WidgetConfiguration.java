@@ -35,8 +35,7 @@ import retrofit2.Response;
 
 public class WidgetConfiguration extends Activity {
 
-    private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    // KEY constants for all widget stuff
+    private int WidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     public static final String WIDGET_KEY = "Recipe_Ingredient_Widget";
     public static String WIDGET_KEY_RECIPE_TITLE = "Title_key";
     RecyclerView mRecyclerView;
@@ -47,25 +46,17 @@ public class WidgetConfiguration extends Activity {
         setContentView(R.layout.recipe_widget);
 
         getData();
-
-        //retrieve intent from WidgetProvider - assign to variable
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            appWidgetId = extras.getInt(
+            WidgetId = extras.getInt(
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
-            /*   If the activity was opened with the widget,
-                 then set result to canceled to ensure
-                 that if user exits the activity, the widget is created and
-                 we are not recreating any activity */
+
             Intent intent = new Intent();
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, WidgetId);
             setResult(Activity.RESULT_CANCELED, intent);
         }
 
-        /* RecyclerView to setLayoutManager as LinearLayout
-         * Make Retrofit calls and pull data and set adapter
-         * */
         mRecyclerView = (RecyclerView) findViewById(R.id.widgets_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -96,9 +87,6 @@ public class WidgetConfiguration extends Activity {
     }
 
 
-
-
-
     class MyRecycler extends RecyclerView.Adapter<MyRecycler.RecipeItemHolder> {
 
         public List<Recipe> mRecipe;
@@ -110,11 +98,17 @@ public class WidgetConfiguration extends Activity {
         @Override
         public RecipeItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Context context = parent.getContext();
-            int layoutNeeded = R.layout.recipe_widget_item;
+            boolean AttachImmediately = false;
             LayoutInflater inflater = LayoutInflater.from(context);
-            boolean shouldAttachToParentImmediately = false;
-            View view = inflater.inflate(layoutNeeded, parent, shouldAttachToParentImmediately);
+            int layoutNeeded = R.layout.recipe_widget_item;
+
+            View view = inflater.inflate(layoutNeeded, parent, AttachImmediately);
             return new RecipeItemHolder(view);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mRecipe.size();
         }
 
         @Override
@@ -122,10 +116,6 @@ public class WidgetConfiguration extends Activity {
             holder.bindItem(mRecipe.get(position), position);
         }
 
-        @Override
-        public int getItemCount() {
-            return mRecipe.size();
-        }
 
         class RecipeItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -144,7 +134,7 @@ public class WidgetConfiguration extends Activity {
             @Override
             public void onClick(View v) {
 
-                if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                if (WidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
 
                     SharedPreferences sharedPreferences = getSharedPreferences(WIDGET_KEY, MODE_PRIVATE);
                     SharedPreferences sharedPreferences_title = getSharedPreferences(WIDGET_KEY_RECIPE_TITLE, MODE_PRIVATE);
@@ -154,26 +144,19 @@ public class WidgetConfiguration extends Activity {
                     Recipe recipe_name = mRecipe.get(getAdapterPosition());
                     String recipename = recipe_name.getName();
 
-                    // gson to json for ingredient List
                     Gson gson = new Gson();
                     String json = gson.toJson(mRecipeIngredient);
-                    prefsEditor.putString("Id: " + appWidgetId, json);
+                    prefsEditor.putString("Id:" + WidgetId, json);
 
+                    prefsEditorForTitle.putString("RecipeTitle" + WidgetId, recipename);
 
-                   // System.out.println("---------------------- inside widget configuration ------------"+json);
-
-                    prefsEditorForTitle.putString("Title " + appWidgetId, recipename);
-
-                    //apply all prefs
-                    prefsEditor.apply();
                     prefsEditorForTitle.apply();
+                    prefsEditor.apply();
 
-                    // use updateWidget method to reassure the installments of remote layouts
-                    RecipeWidgetProvider.updateWidget(WidgetConfiguration.this, appWidgetId);
+                    RecipeWidgetProvider.updateWidget(WidgetConfiguration.this, WidgetId);
 
                     Intent intent = new Intent();
-                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-                    // if operation succeeded, therefore finish this call
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, WidgetId);
                     setResult(Activity.RESULT_OK, intent);
                     finish();
                 }

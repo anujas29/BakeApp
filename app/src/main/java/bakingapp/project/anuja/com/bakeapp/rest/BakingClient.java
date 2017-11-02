@@ -20,29 +20,4 @@ public class BakingClient {
         }
         return retrofit;
     }
-
-//    public static Retrofit getClient() {
-//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-//
-//        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-//                .addInterceptor(logging)
-//                .build();
-//
-//        Gson gson = new GsonBuilder()
-//                .registerTypeAdapter(Recipe.class, new Recipe.RecipeTypeAdapter())
-//                .registerTypeAdapter(Ingredient.class, new Ingredient.IngredientTypeAdapter())
-//                .registerTypeAdapter(Step.class, new Step.StepTypeAdapter())
-//                .create();
-//         if(retrofit==null) {
-//             retrofit = new Retrofit.Builder()
-//                     .baseUrl(BASE_URL)
-//                     .client(okHttpClient)
-//                     .addConverterFactory(GsonConverterFactory.create(gson))
-//                     .build();
-//         }
-//
-//        return retrofit;
-//    }
-
 }

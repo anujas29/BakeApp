@@ -101,14 +101,11 @@ public class MainActivity extends AppCompatActivity  {
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 List<Recipe> RecipeData = response.body();
                 updateData(RecipeData);
-
                 mLayoutManager.onRestoreInstanceState(State);
-
             }
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                //Toast.makeText(getContext(),"No Intenet Access ",Toast.LENGTH_SHORT).show();
 
             }
         });

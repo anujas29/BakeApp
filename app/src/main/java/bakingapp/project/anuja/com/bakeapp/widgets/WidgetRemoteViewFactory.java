@@ -39,36 +39,25 @@ public class WidgetRemoteViewFactory  implements RemoteViewsService.RemoteViewsF
     @Override
     public void onCreate() {
 
-        int appWidgetId = mIntent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        int appId = mIntent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         SharedPreferences preferences =
                 mContext.getSharedPreferences(WidgetConfiguration.WIDGET_KEY, Context.MODE_PRIVATE);
 
-        if(appWidgetId != 0){
+
+        if(appId != 0){
             // Gson
             Gson gson = new Gson();
-            String json = preferences.getString("Id: "+appWidgetId, "");
-
+            String json = preferences.getString("Id: "+appId, "");
             Type ingredient = new TypeToken<List<Ingredient>>() {} .getType();
-            //put it into gson reflect type
             List<Ingredient> recipe_Ingredient = gson.fromJson(json, ingredient);
 
             if(recipe_Ingredient == null){
 
                 return;
             }
-
             mIngredientList = recipe_Ingredient;
 
-
-            for (int i = 0; i < mIngredientList.size(); i++)
-            {
-                System.out.print("----------------------------------Ingredient :::"+mIngredientList.get(i).getIngredient());
-                System.out.print("----------------------------------Measure :::"+mIngredientList.get(i).getMeasure());
-                System.out.print("----------------------------------Quantity :::"+mIngredientList.get(i).getQuantity());
-            }
         }
-
-
     }
 
     @Override
@@ -95,7 +84,13 @@ public class WidgetRemoteViewFactory  implements RemoteViewsService.RemoteViewsF
 
     @Override
     public int getCount() {
-        return mIngredientList.size();
+        if(mIngredientList.size()>0)
+        {
+            return mIngredientList.size();
+        }
+        else {
+            return 0;
+        }
     }
 
 

@@ -5,7 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -41,6 +44,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.recipeName.setText(mRecipe.get(position).getName());
+        String path = mRecipe.get(position).getImage();
+        if (path == "")
+            Picasso.with(context).load(R.drawable.baking_blunders).into(holder.thumbnail);
+        else {
+            Picasso.with(context).load(path).into(holder.thumbnail);
+        }
     }
 
     public void add(List<Recipe> movie) {
@@ -59,6 +68,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
 
         @BindView(R.id.recipe_name)
         TextView recipeName;
+        @BindView(R.id.image_view)
+        ImageView thumbnail;
 
 
         public MyViewHolder(View itemView) {
