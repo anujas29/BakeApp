@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialKeyguardLayout="@layout/recipe_widget_provider"
-    android:initialLayout="@layout/recipe_widget_provider"
+    android:initialLayout="@layout/widget_layout"
+    android:configure="bakingapp.project.anuja.com.bakeapp.widgets.WidgetConfiguration"
     android:minHeight="50dp"
-    android:minWidth="30dp"
+    android:minWidth="40dp"
     android:previewImage="@drawable/baking_blunders"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="1800000"

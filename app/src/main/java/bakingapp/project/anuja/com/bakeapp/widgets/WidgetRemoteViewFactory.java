@@ -1,21 +1,20 @@
 package bakingapp.project.anuja.com.bakeapp.widgets;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.List;
 
 import bakingapp.project.anuja.com.bakeapp.R;
-import bakingapp.project.anuja.com.bakeapp.pojoclass.Recipe;
-import bakingapp.project.anuja.com.bakeapp.rest.BakingClient;
-import bakingapp.project.anuja.com.bakeapp.rest.BakingInterface;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static bakingapp.project.anuja.com.bakeapp.MainActivity.recipeList;
+import bakingapp.project.anuja.com.bakeapp.pojoclass.Ingredient;
 
 /**
  * Created by USER on 02-10-2017.
@@ -23,6 +22,14 @@ import static bakingapp.project.anuja.com.bakeapp.MainActivity.recipeList;
 
 public class WidgetRemoteViewFactory  implements RemoteViewsService.RemoteViewsFactory {
 
+
+    private List<Ingredient> mIngredientList;
+    private Intent mIntent;
+
+    public WidgetRemoteViewFactory(Context context, Intent intent){
+        mContext = context;
+        mIntent = intent;
+    }
     private Context mContext;
 
     public WidgetRemoteViewFactory(Context applicationContext) {
@@ -32,41 +39,53 @@ public class WidgetRemoteViewFactory  implements RemoteViewsService.RemoteViewsF
     @Override
     public void onCreate() {
 
+        int appWidgetId = mIntent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        SharedPreferences preferences =
+                mContext.getSharedPreferences(WidgetConfiguration.WIDGET_KEY, Context.MODE_PRIVATE);
+
+        if(appWidgetId != 0){
+            // Gson
+            Gson gson = new Gson();
+            String json = preferences.getString("Id: "+appWidgetId, "");
+
+            Type ingredient = new TypeToken<List<Ingredient>>() {} .getType();
+            //put it into gson reflect type
+            List<Ingredient> recipe_Ingredient = gson.fromJson(json, ingredient);
+
+            if(recipe_Ingredient == null){
+
+                return;
+            }
+
+            mIngredientList = recipe_Ingredient;
+
+
+            for (int i = 0; i < mIngredientList.size(); i++)
+            {
+                System.out.print("----------------------------------Ingredient :::"+mIngredientList.get(i).getIngredient());
+                System.out.print("----------------------------------Measure :::"+mIngredientList.get(i).getMeasure());
+                System.out.print("----------------------------------Quantity :::"+mIngredientList.get(i).getQuantity());
+            }
+        }
+
+
     }
 
     @Override
-    public int getCount() {
-        return recipeList.size();
+    public RemoteViews getViewAt(int position) {
+        RemoteViews remoteViews =
+                new RemoteViews(mContext.getPackageName(), R.layout.widget_recipe_ing_list);
+        remoteViews.setTextViewText(R.id.text_ingredient, mIngredientList.get(position).getIngredient());
+        remoteViews.setTextViewText(R.id.text_measure, String.valueOf(mIngredientList.get(position).getMeasure()));
+        remoteViews.setTextViewText(R.id.text_quantity, String.valueOf(mIngredientList.get(position).getQuantity()));
+
+        return remoteViews;
     }
 
-    public void getData()
-    {
-        BakingInterface apiService = BakingClient.getClient().create(BakingInterface.class);
-        Call<List<Recipe>> call = apiService.getRecipes();
-
-        call.enqueue(new Callback<List<Recipe>>() {
-            @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                List<Recipe> RecipeData = response.body();
-                recipeList = RecipeData;
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
-
-            }
-        });
-    }
 
     @Override
     public void onDataSetChanged() {
-        getData();
-    }
 
-    @Override
-    public int getViewTypeCount() {
-        return 2;
     }
 
     @Override
@@ -75,18 +94,19 @@ public class WidgetRemoteViewFactory  implements RemoteViewsService.RemoteViewsF
     }
 
     @Override
-    public RemoteViews getViewAt(int position) {
-
-       Log.v(mContext.getClass().getSimpleName(), "position = "+position);
-
-        RemoteViews rview = new RemoteViews(mContext.getPackageName(), R.layout.recipe_widget_item);
-        rview.setTextViewText(R.id.recipe_textview, recipeList.get(position).getName());
-        return rview;
+    public int getCount() {
+        return mIngredientList.size();
     }
+
 
     @Override
     public RemoteViews getLoadingView() {
         return null;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 1;
     }
 
     @Override

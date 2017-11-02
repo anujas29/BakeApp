@@ -73,6 +73,8 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
     String title;
+    private long PlayingPosition;
+    String StepVideoUrl;
 
 
     @Override
@@ -82,6 +84,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
             step_List = savedInstanceState.getParcelableArrayList(STEP_LIST);
             position = savedInstanceState.getInt(LIST_POSITION);
         }
+        System.out.println("------------------------- onCreateView ------------------------------------");
         View rootView = inflater.inflate(R.layout.activity_step, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         title = step_List.get(position).getShortDescription();
@@ -90,6 +93,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
         if (step_List != null) {
 
             initializeMediaSession();
+            StepVideoUrl = step_List.get(position).getVideoURL();
             initializePlayer(Uri.parse(step_List.get(position).getVideoURL()));
 
             description.setText(step_List.get(position).getDescription());
@@ -102,11 +106,30 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
         return rootView;
     }
 
+//    @Override
+//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        if (savedInstanceState != null && mSimpleExoPlayer != null) {
+//            System.out.println("------------------------- onActivityCreated ------------------------------------");
+//            step_List = savedInstanceState.getParcelableArrayList(STEP_LIST);
+//            position = savedInstanceState.getInt(LIST_POSITION);
+//            StepVideoUrl = step_List.get(position).getVideoURL();
+//            StepVideoUrl = savedInstanceState.getString("url");
+//            PlayingPosition = savedInstanceState.getLong("playing_pos");
+//            mSimpleExoPlayer.seekTo(PlayingPosition);
+//        }
+//    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(STEP_LIST, (ArrayList<? extends Parcelable>) step_List);
         outState.putInt(LIST_POSITION, position);
+//        if (mSimpleExoPlayer != null) {
+//            PlayingPosition = mSimpleExoPlayer.getCurrentPosition();
+//            outState.putLong("playing_pos", PlayingPosition);
+//            outState.putString("url", StepVideoUrl);
+//        }
     }
 
     public void setPosition(int position) {

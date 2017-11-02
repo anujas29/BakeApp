@@ -39,7 +39,9 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".widgets.RecipeWidgetProvider">
+        <receiver android:name=".widgets.RecipeWidgetProvider"
+            android:icon="@drawable/baking_blunders">
+
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -49,9 +51,18 @@
                 android:resource="@xml/recipe_widget_provider_info" />
         </receiver>
 
-        <service
-            android:name=".widgets.WidgetRemoteViewService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <activity android:name=".widgets.WidgetConfiguration">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+
+        </activity>
+
+        <service android:name=".widgets.WidgetRemoteViewService"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
+        </service>
+
+
     </application>
 
 </manifest>

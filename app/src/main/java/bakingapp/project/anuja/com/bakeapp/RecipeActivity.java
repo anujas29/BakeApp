@@ -3,6 +3,7 @@ package bakingapp.project.anuja.com.bakeapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +40,7 @@ public class RecipeActivity extends AppCompatActivity {
 
     private StepIngredientAdapter stepIngredientAdapter;
 
+    @Nullable
     @BindView(R.id.textview_recipe)
     TextView recipe_name;
 

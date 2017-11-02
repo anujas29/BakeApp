@@ -15,6 +15,9 @@
     <string name="step">Steps</string>
     <string name="stepDes">StepDes</string>
 
+    <string name="widget_choose_text">Choose Recipe Ingredient</string>
+    <string name="recipe_name">Recipe Name</string>
+
 
 
 </resources>
