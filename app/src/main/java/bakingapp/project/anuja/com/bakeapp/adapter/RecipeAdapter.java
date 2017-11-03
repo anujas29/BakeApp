@@ -45,7 +45,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.recipeName.setText(mRecipe.get(position).getName());
         String path = mRecipe.get(position).getImage();
-        if (path == "")
+        if (path.isEmpty())
             Picasso.with(context).load(R.drawable.baking_blunders).into(holder.thumbnail);
         else {
             Picasso.with(context).load(path).into(holder.thumbnail);

@@ -2,13 +2,18 @@ package bakingapp.project.anuja.com.bakeapp;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +33,20 @@ public class MainActivity extends AppCompatActivity  {
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
+    @BindView(R.id.mainLayout)
+    LinearLayout main_Layout;
+
     public static List<Recipe> recipeList = new ArrayList<>();
     private GridLayoutManager mLayoutManager;
     private String List_State = "list_state";
     private Parcelable State;
     private RecipeAdapter mRecipeAdapter;
     public boolean Tablet;
+    Snackbar snackbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -78,7 +88,29 @@ public class MainActivity extends AppCompatActivity  {
             public void onLongClick(View view, int position) {}
         }));
 
-        getRecipe();
+
+
+        if (isNetworkConnected()) {
+            getRecipe();
+        }
+        else {
+            snackbar = Snackbar
+                    .make(main_Layout, "No internet connection!", Snackbar.LENGTH_LONG)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                        }
+                    });
+            snackbar.setActionTextColor(Color.RED);
+            snackbar.show();
+        }
+    }
+
+    private boolean isNetworkConnected() {
+
+        ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
 
     }
     private void updateData(List<Recipe> recipe) {
@@ -88,6 +120,7 @@ public class MainActivity extends AppCompatActivity  {
         mRecyclerView.setAdapter(mRecipeAdapter);
 
     }
+
 
 
     private void getRecipe()
@@ -106,6 +139,9 @@ public class MainActivity extends AppCompatActivity  {
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                snackbar = Snackbar
+                        .make(main_Layout, "Error occur during retrieving..", Snackbar.LENGTH_LONG);
+                snackbar.show();
 
             }
         });

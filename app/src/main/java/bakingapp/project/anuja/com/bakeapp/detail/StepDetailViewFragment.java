@@ -3,10 +3,13 @@ package bakingapp.project.anuja.com.bakeapp.detail;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -15,8 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -35,6 +39,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +65,12 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     Button buttonNext;
     @BindView(R.id.button_prev)
     Button buttonPrev;
+    @BindView(R.id.thumbnail)
+    ImageView mthumbnail;
     Unbinder unbinder;
+
+    @BindView(R.id.scrollView)
+    ScrollView mScrollView;
 
 
 
@@ -104,8 +114,14 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
             description.setText(step_List.get(position).getDescription());
 
+            if (step_List.get(position).getThumbnailURL() == "")
+                Picasso.with(getContext()).load(step_List.get(position).getThumbnailURL()).into(mthumbnail);
+
         } else {
-            Toast.makeText(getContext(), "No Steps Present", Toast.LENGTH_SHORT).show();
+
+            Snackbar snackbar = Snackbar
+                    .make(mScrollView, "No Steps Present", Snackbar.LENGTH_LONG);
+            snackbar.show();
         }
 
 
@@ -160,6 +176,11 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
             mSimpleExoPlayer.setPlayWhenReady(true);
         }
     }
+    private boolean isNetworkConnected() {
+        ConnectivityManager conMgr =  (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 
 
 
@@ -204,8 +225,16 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
         releasePlayer();
         description.setText(step_List.get(position).getDescription());
+        if (step_List.get(position).getThumbnailURL() == "")
+            Picasso.with(getContext()).load(step_List.get(position).getThumbnailURL()).into(mthumbnail);
         getActivity().setTitle(step_List.get(position).getShortDescription());
-        initializePlayer(Uri.parse(step_List.get(position).getVideoURL()));
+        if (!isNetworkConnected()) {
+            Snackbar snackbar = Snackbar
+                    .make(mScrollView, "Error occor while loading video..", Snackbar.LENGTH_LONG);
+            snackbar.show();
+
+        }
+            initializePlayer(Uri.parse(step_List.get(position).getVideoURL()));
 
     }
 
@@ -219,7 +248,15 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
         releasePlayer();
         description.setText(step_List.get(position).getDescription());
+        if (step_List.get(position).getThumbnailURL() == "")
+            Picasso.with(getContext()).load(step_List.get(position).getThumbnailURL()).into(mthumbnail);
         getActivity().setTitle(step_List.get(position).getShortDescription());
+        if (!isNetworkConnected()) {
+            Snackbar snackbar = Snackbar
+                    .make(mScrollView, "Error occor while loading video..", Snackbar.LENGTH_LONG);
+            snackbar.show();
+
+        }
         initializePlayer(Uri.parse(step_List.get(position).getVideoURL()));
     }
 
@@ -242,6 +279,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     }
     @Override
     public void onResume() {
+
         super.onResume();
         Foreground();
     }
@@ -326,6 +364,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
         @Override
         public void onPause() {
             Background();
+
         }
     }
 

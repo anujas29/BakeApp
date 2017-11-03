@@ -49,6 +49,7 @@ public class RecipeActivity extends AppCompatActivity {
 
     private String LIST_STATE = "list_state";
     private Parcelable ListState;
+    public boolean isTablet;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class RecipeActivity extends AppCompatActivity {
 
         IngredientsList = recipeList.getIngredients();
         stepsList = recipeList.getSteps();
+        isTablet = getResources().getBoolean(R.bool.tablet);
 
         Log.v(RecipeActivity.class.getSimpleName(), "ingredients List  = " + IngredientsList.toString());
         Log.v(RecipeActivity.class.getSimpleName(), "steps List  = " + stepsList.toString());
@@ -72,11 +74,16 @@ public class RecipeActivity extends AppCompatActivity {
         step_ingredient_RecyclerView.setLayoutManager(mLayoutManager);
         stepIngredientAdapter = new StepIngredientAdapter(IngredientsList,stepsList,TwoPane, this);
         step_ingredient_RecyclerView.setAdapter(stepIngredientAdapter);
-        recipe_name.setText(recipeList.getName());
+
+
+        if(recipe_name!= null)
+        {
+            recipe_name.setText(recipeList.getName());
+        }
 
         mLayoutManager.onRestoreInstanceState(ListState);
 
-        if (findViewById(R.id.detail_item_container) != null) {
+        if (isTablet) {
             TwoPane = true;
         }
 
