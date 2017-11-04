@@ -3,6 +3,7 @@ package bakingapp.project.anuja.com.bakeapp.detail;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -19,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ScrollView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -69,8 +70,8 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     ImageView mthumbnail;
     Unbinder unbinder;
 
-    @BindView(R.id.scrollView)
-    ScrollView mScrollView;
+    @BindView(R.id.mLinearLayout)
+    LinearLayout mLinearLayout;
 
 
 
@@ -86,20 +87,25 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     private long PlayingPosition;
     String StepVideoUrl;
     private boolean isReady;
+    private boolean Ready;
+   int  flag = 0;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
-
+        
         if(savedInstanceState!= null){
             step_List = savedInstanceState.getParcelableArrayList(STEP_LIST);
             position = savedInstanceState.getInt(LIST_POSITION);
+
             if(mSimpleExoPlayer != null) {
+
                 StepVideoUrl = step_List.get(position).getVideoURL();
                 StepVideoUrl = savedInstanceState.getString("url");
                 PlayingPosition = savedInstanceState.getLong("playing_pos");
                 mSimpleExoPlayer.seekTo(PlayingPosition);
             }
+
         }
         View rootView = inflater.inflate(R.layout.activity_step, container, false);
         unbinder = ButterKnife.bind(this, rootView);
@@ -108,9 +114,10 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
         if (step_List != null) {
 
-            initializeMediaSession();
-            StepVideoUrl = step_List.get(position).getVideoURL();
-            initializePlayer(Uri.parse(step_List.get(position).getVideoURL()));
+                initializeMediaSession();
+                StepVideoUrl = step_List.get(position).getVideoURL();
+                initializePlayer(Uri.parse(step_List.get(position).getVideoURL()));
+                mSimpleExoPlayer.setPlayWhenReady(true);
 
             description.setText(step_List.get(position).getDescription());
 
@@ -120,7 +127,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
         } else {
 
             Snackbar snackbar = Snackbar
-                    .make(mScrollView, "No Steps Present", Snackbar.LENGTH_LONG);
+                    .make(mLinearLayout, "No Steps Present", Snackbar.LENGTH_LONG);
             snackbar.show();
         }
 
@@ -138,7 +145,17 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
             StepVideoUrl = savedInstanceState.getString("url");
             PlayingPosition = savedInstanceState.getLong("playing_pos");
             mSimpleExoPlayer.seekTo(PlayingPosition);
+
+            if(flag == 1) {
+                mSimpleExoPlayer.setPlayWhenReady(true);
+            }
+
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -230,7 +247,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
         getActivity().setTitle(step_List.get(position).getShortDescription());
         if (!isNetworkConnected()) {
             Snackbar snackbar = Snackbar
-                    .make(mScrollView, "Error occor while loading video..", Snackbar.LENGTH_LONG);
+                    .make(mLinearLayout, "Error occor while loading video..", Snackbar.LENGTH_LONG);
             snackbar.show();
 
         }
@@ -253,7 +270,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
         getActivity().setTitle(step_List.get(position).getShortDescription());
         if (!isNetworkConnected()) {
             Snackbar snackbar = Snackbar
-                    .make(mScrollView, "Error occor while loading video..", Snackbar.LENGTH_LONG);
+                    .make(mLinearLayout, "Error occor while loading video..", Snackbar.LENGTH_LONG);
             snackbar.show();
 
         }
@@ -262,6 +279,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
     private void releasePlayer() {
         if (mSimpleExoPlayer != null) {
+
             mSimpleExoPlayer.stop();
             mSimpleExoPlayer.release();
             mSimpleExoPlayer = null;
@@ -276,6 +294,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
         if (mMediaSession != null) {
             mMediaSession.setActive(false);
         }
+
     }
     @Override
     public void onResume() {
@@ -290,12 +309,21 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
         if (mSimpleExoPlayer != null) mSimpleExoPlayer.release();
     }
 
-
-
     @Override
     public void onStop() {
         super.onStop();
-        Background();
+        Ready = mSimpleExoPlayer.getPlayWhenReady();
+
+        if(Ready)
+        {
+            flag = 1;
+        }
+        else {
+
+            flag = 0;
+            Background();
+        }
+
     }
 
     @Override
@@ -323,6 +351,9 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
             mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
                     mSimpleExoPlayer.getCurrentPosition(), 1f);
         }
+//        else if(playbackState == ExoPlayer.STATE_ENDED){
+//            mStateBuilder.setState(PlaybackStateCompat.STATE_STOPPED, mSimpleExoPlayer.getCurrentPosition(), 1f);
+ //       }
         mMediaSession.setPlaybackState(mStateBuilder.build());
 
     }
@@ -339,12 +370,14 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     public void Foreground() {
         if (mSimpleExoPlayer != null) {
             mSimpleExoPlayer.setPlayWhenReady(isReady);
+
         }
     }
 
     public void Background() {
         if (mSimpleExoPlayer != null) {
             isReady = mSimpleExoPlayer.getPlayWhenReady();
+
             mSimpleExoPlayer.setPlayWhenReady(false);
         }
     }
@@ -363,7 +396,8 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
         @Override
         public void onPause() {
-            Background();
+           // Background();
+            mSimpleExoPlayer.release();
 
         }
     }

@@ -41,6 +41,6 @@ public class StepDetailDisplayTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        onView(withId(R.id.step_layout)).check(matches(isDisplayed()));
+        onView(withId(R.id.mLinearLayout)).check(matches(isDisplayed()));
     }
 }
