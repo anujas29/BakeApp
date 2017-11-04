@@ -93,7 +93,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
-        
+
         if(savedInstanceState!= null){
             step_List = savedInstanceState.getParcelableArrayList(STEP_LIST);
             position = savedInstanceState.getInt(LIST_POSITION);
@@ -351,9 +351,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
             mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
                     mSimpleExoPlayer.getCurrentPosition(), 1f);
         }
-//        else if(playbackState == ExoPlayer.STATE_ENDED){
-//            mStateBuilder.setState(PlaybackStateCompat.STATE_STOPPED, mSimpleExoPlayer.getCurrentPosition(), 1f);
- //       }
+
         mMediaSession.setPlaybackState(mStateBuilder.build());
 
     }
@@ -401,8 +399,6 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
         }
     }
-
-
     public static class MediaReceiver extends BroadcastReceiver {
 
         public MediaReceiver() {
