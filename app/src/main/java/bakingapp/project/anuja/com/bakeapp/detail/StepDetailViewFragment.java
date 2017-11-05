@@ -73,8 +73,6 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     @BindView(R.id.mLinearLayout)
     LinearLayout mLinearLayout;
 
-
-
     public static final String LIST_POSITION = "position";
     public static final String STEP_LIST = "step";
     private List<Step> step_List;
@@ -87,8 +85,8 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     private long PlayingPosition;
     String StepVideoUrl;
     private boolean isReady;
-    private boolean Ready;
-   int  flag = 0;
+    private String flag;
+    int  State = 0 ;
 
 
     @Override
@@ -145,11 +143,8 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
             StepVideoUrl = savedInstanceState.getString("url");
             PlayingPosition = savedInstanceState.getLong("playing_pos");
             mSimpleExoPlayer.seekTo(PlayingPosition);
-
-            if(flag == 1) {
-                mSimpleExoPlayer.setPlayWhenReady(true);
-            }
-
+            flag = savedInstanceState.getString("Ready");
+            State = Integer.parseInt(flag);
         }
     }
 
@@ -163,10 +158,13 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(STEP_LIST, (ArrayList<? extends Parcelable>) step_List);
         outState.putInt(LIST_POSITION, position);
+
         if (mSimpleExoPlayer != null) {
             PlayingPosition = mSimpleExoPlayer.getCurrentPosition();
+            State =  mSimpleExoPlayer.getPlaybackState();
             outState.putLong("playing_pos", PlayingPosition);
             outState.putString("url", StepVideoUrl);
+            outState.putString("Ready", Integer.toString(State));
         }
     }
 
@@ -300,7 +298,11 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     public void onResume() {
 
         super.onResume();
-        Foreground();
+        if(State == 3)
+            mSimpleExoPlayer.setPlayWhenReady(true);
+        else
+            Foreground();
+
     }
     @Override
     public void onDetach() {
@@ -312,17 +314,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     @Override
     public void onStop() {
         super.onStop();
-        Ready = mSimpleExoPlayer.getPlayWhenReady();
-
-        if(Ready)
-        {
-            flag = 1;
-        }
-        else {
-
-            flag = 0;
-            Background();
-        }
+        Background();
 
     }
 
@@ -367,8 +359,7 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
     }
     public void Foreground() {
         if (mSimpleExoPlayer != null) {
-            mSimpleExoPlayer.setPlayWhenReady(isReady);
-
+            mSimpleExoPlayer.setPlayWhenReady(false);
         }
     }
 
@@ -394,7 +385,6 @@ public class StepDetailViewFragment extends Fragment implements ExoPlayer.EventL
 
         @Override
         public void onPause() {
-           // Background();
             mSimpleExoPlayer.release();
 
         }
